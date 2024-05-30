@@ -1,0 +1,18 @@
+-- 코드를 작성해주세요
+SELECT B.TOTAL_SCORE AS SCORE, A.EMP_NO, A.EMP_NAME, A.POSITION, A.EMAIL
+FROM HR_EMPLOYEES A
+JOIN
+(
+    SELECT EMP_NO, SUM(SCORE) AS TOTAL_SCORE 
+    FROM HR_GRADE 
+    GROUP BY EMP_NO 
+    HAVING SUM(SCORE) = (
+            SELECT MAX(SUM_SCORE)
+            FROM (
+                SELECT SUM(SCORE) AS SUM_SCORE
+                FROM HR_GRADE
+                GROUP BY EMP_NO
+            ) AS MAX_SCORE_DETECT
+        )
+) B
+ON A.EMP_NO = B.EMP_NO;
